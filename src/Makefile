@@ -1,10 +1,10 @@
-all: armsim add.bin
+all: mzero add.bin
 
-armsim: memory.o sysbus.o clock.o arm.o main.o
+mzero: memory.o sysbus.o clock.o arm.o main.o
 	g++ -o $@ $^
 
 %.o: %.cpp
-	g++ -std=c++11 -c $<
+	g++ -std=c++0x -c $<
 
 %.elf: %.s
 	arm-none-eabi-gcc -nostdlib -Ttext=0x0 -mcpu=cortex-m0 $< -o $@
@@ -14,6 +14,6 @@ armsim: memory.o sysbus.o clock.o arm.o main.o
 
 clean:
 	rm -f *.o
-	rm -f armsim
+	rm -f mzero
 	rm -f add.bin
 	rm -f add.elf
