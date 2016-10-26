@@ -7,12 +7,14 @@ SystemBus::SystemBus()
 
 void SystemBus::register_device(uint32_t base_addr, DeviceIf *dev)
 {
-  m_devs.push_back({base_addr, dev});
+  SysDevice sys_device = {base_addr, dev};
+  m_devs.push_back(sys_device);
 }
 
 uint32_t SystemBus::read32(uint32_t addr)
 {
-  for (auto& sysdev: m_devs) {
+  for (auto it = m_devs.begin(); it != m_devs.end(); it++) {
+    auto& sysdev = *it;
     uint32_t base_addr = sysdev.base_addr;
     uint32_t size = sysdev.device->get_size();
     
@@ -24,7 +26,8 @@ uint32_t SystemBus::read32(uint32_t addr)
 
 void SystemBus::write32(uint32_t addr, uint32_t data)
 {
-  for (auto& sysdev: m_devs) {
+  for (auto it = m_devs.begin(); it != m_devs.end(); it++) {
+    auto& sysdev = *it;
     uint32_t base_addr = sysdev.base_addr;
     uint32_t size = sysdev.device->get_size();
 

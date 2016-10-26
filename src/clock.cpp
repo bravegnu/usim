@@ -13,7 +13,9 @@ void Clock::add_clocked(ClockedIf *clocked)
 
 void Clock::tick()
 {
-  for (auto& clocked: m_clocked_list) {
-    clocked->execute();
+  for (auto it = m_clocked_list.begin();
+       it != m_clocked_list.end();
+       it++) {
+    (*it)->execute();
   }
 }
