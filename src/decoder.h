@@ -43,7 +43,7 @@ enum Op {
 
   /* Load Store */
   STR, STRH, STRB, LDRSB, LDR, LDRH, LDRB, LDRSH, STRI, LDRI, STRBI,
-  LDRBI, STRHI, LDRHI, LDM, STM,
+  LDRBI, STRHI, LDRHI, LDM, STM, LDRL,
 
   /* Misc. */
   SXTH, SXTB, UXTH, UXTB, PUSH, CPS, REV, REV16, REVSH, POP, BKPT,
@@ -58,6 +58,9 @@ enum Op {
   UDF,
 };
 
+#define DECODE_TAB_SIZE 77
+#define DECODE32_TAB_SIZE 7
+
 struct DecodedInst {
   uint8_t op;
   uint8_t rd;
@@ -67,27 +70,117 @@ struct DecodedInst {
   uint16_t specific;
 };
 
+class Decoder;
+
+struct DecoderTab {
+  uint16_t mask;
+  uint16_t match;
+  void (Decoder::*decode)();
+};
+
+struct Decoder32Tab {
+  uint32_t mask;
+  uint32_t match;
+  void (Decoder::*decode)();
+};
+
 class Decoder {
 private:
   uint32_t m_inst;
   bool m_is32;
+  static const DecoderTab m_decode_table[DECODE_TAB_SIZE];
+  static const Decoder32Tab m_decode32_table[DECODE32_TAB_SIZE];
 
-  void decode_00xxxx();
-  void decode_010000();
-  void decode_010001();
-  void decode_01001x();
-  void decode_0101xx_011xxx_100xxx();
-  void decode_10100x();
-  void decode_10101x();
-  void decode_1011xx();
-  void decode_11000x();
-  void decode_11001x();
-  void decode_1101xx();
-  void decode_11100x();
+  void decode_lsli();
+  void decode_lsri();
+  void decode_asri();
+  void decode_add_t1();
+  void decode_sub();
+  void decode_addi_t1();
+  void decode_subi_t1();
+  void decode_movi();
+  void decode_cmpi();
+  void decode_addi_t2();
+  void decode_subi_t2();
+  void decode_dproc();
+  void decode_and();
+  void decode_eor();
+  void decode_lsl();
+  void decode_lsr();
+  void decode_asr();
+  void decode_adc();
+  void decode_sbc();
+  void decode_ror();
+  void decode_tst();
+  void decode_rsb();
+  void decode_cmp();
+  void decode_cmn();
+  void decode_orr();
+  void decode_mul();
+  void decode_bic();
+  void decode_mvn();
+  void decode_add_t2();
+  void decode_cmp_t1();
+  void decode_cmp_t2();
+  void decode_mov_t1();
+  void decode_mov_t2();
+  void decode_bx();
+  void decode_blx();
+  void decode_ldrl();
+  void decode_load_store();
+  void decode_str();
+  void decode_ldr();
+  void decode_strh();
+  void decode_strb();
+  void decode_ldrsb();
+  void decode_ldrh();
+  void decode_ldrb();
+  void decode_ldrsh();
+  void decode_load_store_imm();
+  void decode_ldri_t2();
+  void decode_stri_t2();
+  void decode_ldrbi();
+  void decode_strbi();
+  void decode_ldrhi();
+  void decode_strhi();
+  void decode_ldri_t1();
+  void decode_stri_t1();
+  void decode_adr();
+  void decode_addi_sp_t1();
+  void decode_addi_sp_t2();
+  void decode_subi_sp();
+  void decode_sxth();
+  void decode_sxtb();
+  void decode_uxth();
+  void decode_uxtb();
+  void decode_push();
+  void decode_cps();
+  void decode_rev();
+  void decode_rev16();
+  void decode_revsh();
+  void decode_pop();
+  void decode_bkpt();
+  void decode_nop();
+  void decode_yield();
+  void decode_wfe();
+  void decode_wfi();
+  void decode_sev();
+  void decode_stm();
+  void decode_ldm();
+  void decode_udf();
+  void decode_svn();
+  void decode_b_t1();
+  void decode_b_t2();
+  void decode_svc();
   void decode_inst();
 
-  void decode_branch();
-  void decode_branch_misc();
+  void decode_bl();
+  void decode_msr();
+  void decode_dsb();
+  void decode_dmb();
+  void decode_isb();
+  void decode_mrs();
+  void decode_udf32();
   void decode_inst32();
 
   uint8_t REG(unsigned offset)
@@ -140,12 +233,12 @@ private:
     return (int32_t ((m_inst & 0x7FF) << 21)) >> 21;
   }
 
-  uint16_t HI()
+  uint16_t HI16()
   {
     return (m_inst >> 16) & 0xFF;
   }
 
-  uint16_t LO()
+  uint16_t LO16()
   {
     return (m_inst & 0xFF);
   }
