@@ -1,6 +1,6 @@
 all: mzero add.bin
 
-mzero: memory.o sysbus.o clock.o arm.o main.o
+mzero: memory.o sysbus.o clock.o arm.o main.o decoder.o
 	g++ -o $@ $^
 
 %.o: %.cpp
