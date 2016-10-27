@@ -1,6 +1,6 @@
-all: mzero add.bin
+all: usim add.bin
 
-mzero: memory.o sysbus.o clock.o arm.o main.o decoder.o
+usim: memory.o sysbus.o clock.o arm.o main.o decoder.o
 	g++ -o $@ $^
 
 %.o: %.cpp
@@ -14,6 +14,6 @@ mzero: memory.o sysbus.o clock.o arm.o main.o decoder.o
 
 clean:
 	rm -f *.o
-	rm -f mzero
+	rm -f usim
 	rm -f add.bin
 	rm -f add.elf
