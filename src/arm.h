@@ -4,7 +4,7 @@
 #include <cstdint>
 #include "clock.h"
 #include "sysbus.h"
-
+#include "decoder.h"
 
 class CortexM0: public ClockedIf
 {
@@ -14,6 +14,7 @@ class CortexM0: public ClockedIf
   uint32_t m_regs[MAX_REGS];
   SystemBus *m_sysbus;
   uint16_t fetch_inst();
+  Decoder decoder;
  public:
   CortexM0(Clock& clock, SystemBus *sysbus);
   void execute();

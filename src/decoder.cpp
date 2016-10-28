@@ -118,551 +118,557 @@ const DecoderTab Decoder::m_decode_table[] = {
   { TM( 0), PTN(0b1011111100010000, 0), &Decoder::decode_yield },
 };
 
-Decoder::Decoder(uint32_t inst, bool is32)
-  : m_inst (inst)
-  , m_is32 (is32)
+Decoder::Decoder() {}
+
+DecodedInst Decoder::decode(uint32_t inst, bool is32)
 {
+  m_inst = inst;
+  m_is32 = is32;
+  m_di.op = UDF;
+  
   if (is32)
     decode_inst32();
   else
     decode_inst();
+
+  return m_di;
 }
 
 void Decoder::decode_lsli()
 {
-  di.op = LSLI;
-  di.rd = REG(0);
-  di.rm = REG(3);
-  di.imm = IMM5();
+  m_di.op = LSLI;
+  m_di.rd = REG(0);
+  m_di.rm = REG(3);
+  m_di.imm = IMM5();
 }
 
 void Decoder::decode_lsri()
 {
-  di.op = LSRI;
-  di.rd = REG(0);
-  di.rm = REG(3);
+  m_di.op = LSRI;
+  m_di.rd = REG(0);
+  m_di.rm = REG(3);
   if (IMM5() == 0)
-    di.imm = 32;
+    m_di.imm = 32;
   else
-    di.imm = IMM5();
+    m_di.imm = IMM5();
 }
 
 void Decoder::decode_asri()
 {
-  di.op = ASRI;
-  di.rd = REG(0);
-  di.rm = REG(3);
+  m_di.op = ASRI;
+  m_di.rd = REG(0);
+  m_di.rm = REG(3);
   if (IMM5() == 0)
-    di.imm = 32;
+    m_di.imm = 32;
   else
-    di.imm = IMM5();
+    m_di.imm = IMM5();
 }
 
 void Decoder::decode_add_t1()
 {
-  di.op = ADD;
-  di.rm = REG(6);
-  di.rn = REG(3);
-  di.rd = REG(0);
+  m_di.op = ADD;
+  m_di.rm = REG(6);
+  m_di.rn = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_sub()
 {
-  di.op = SUB;
-  di.rm = REG(6);
-  di.rn = REG(3);
-  di.rd = REG(0);
+  m_di.op = SUB;
+  m_di.rm = REG(6);
+  m_di.rn = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_addi_t1()
 {
-  di.op = ADDI;
-  di.imm = IMM3();
-  di.rn = REG(3);
-  di.rd = REG(0);
+  m_di.op = ADDI;
+  m_di.imm = IMM3();
+  m_di.rn = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_subi_t1()
 {
-  di.op = SUBI;
-  di.imm = IMM3();
-  di.rn = REG(3);
-  di.rd = REG(0);
+  m_di.op = SUBI;
+  m_di.imm = IMM3();
+  m_di.rn = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_movi()
 {
-  di.op = MOV;
-  di.rd = REG(8);
-  di.imm = IMM8();
+  m_di.op = MOV;
+  m_di.rd = REG(8);
+  m_di.imm = IMM8();
 }
 
 void Decoder::decode_cmpi()
 {
-  di.op = CMP;
-  di.rn = REG(8);
-  di.imm = IMM8();
+  m_di.op = CMP;
+  m_di.rn = REG(8);
+  m_di.imm = IMM8();
 }
 
 void Decoder::decode_addi_t2()
 {
-  di.op = ADDI;
-  di.rd = REG(8);
-  di.rn = di.rd;
-  di.imm = IMM8();
+  m_di.op = ADDI;
+  m_di.rd = REG(8);
+  m_di.rn = m_di.rd;
+  m_di.imm = IMM8();
 }
 
 void Decoder::decode_subi_t2()
 {
-  di.op = SUBI;
-  di.rd = REG(8);
-  di.rn = di.rd;
-  di.imm = IMM8();
+  m_di.op = SUBI;
+  m_di.rd = REG(8);
+  m_di.rn = m_di.rd;
+  m_di.imm = IMM8();
 }
 
 void Decoder::decode_dproc()
 {
-  di.rm = REG(3);
-  di.rd = REG(0);
-  di.rn = di.rd;
+  m_di.rm = REG(3);
+  m_di.rd = REG(0);
+  m_di.rn = m_di.rd;
 }
 
 void Decoder::decode_and()
 {
   decode_dproc();
-  di.op = AND;
+  m_di.op = AND;
 }
 
 void Decoder::decode_eor()
 {
   decode_dproc();
-  di.op = EOR;
+  m_di.op = EOR;
 }
 
 void Decoder::decode_lsl()
 {
   decode_dproc();
-  di.op = LSL;
+  m_di.op = LSL;
 }
 
 void Decoder::decode_lsr()
 {
   decode_dproc();
-  di.op = LSR;
+  m_di.op = LSR;
 }
 
 void Decoder::decode_asr()
 {
   decode_dproc();
-  di.op = ASR;
+  m_di.op = ASR;
 }
 
 void Decoder::decode_adc()
 {
   decode_dproc();
-  di.op = ADC;
+  m_di.op = ADC;
 }
 
 void Decoder::decode_sbc()
 {
   decode_dproc();
-  di.op = SBC;
+  m_di.op = SBC;
 }
 
 void Decoder::decode_ror()
 {
   decode_dproc();
-  di.op = ROR;
+  m_di.op = ROR;
 }
 
 void Decoder::decode_tst()
 {
   decode_dproc();
-  di.op = TST;
+  m_di.op = TST;
 }
 
 void Decoder::decode_rsb()
 {
   decode_dproc();
-  di.op = RSB;
+  m_di.op = RSB;
 }
 
 void Decoder::decode_cmp()
 {
   decode_dproc();
-  di.op = CMP;
+  m_di.op = CMP;
 }
 
 void Decoder::decode_cmn()
 {
   decode_dproc();
-  di.op = CMN;
+  m_di.op = CMN;
 }
 
 void Decoder::decode_orr()
 {
   decode_dproc();
-  di.op = ORR;
+  m_di.op = ORR;
 }
 
 void Decoder::decode_mul()
 {
   decode_dproc();
-  di.op = MUL;
+  m_di.op = MUL;
 }
 
 void Decoder::decode_bic()
 {
   decode_dproc();
-  di.op = BIC;
+  m_di.op = BIC;
 }
 
 void Decoder::decode_mvn()
 {
   decode_dproc();
-  di.op = MVN;
+  m_di.op = MVN;
 }
 
 void Decoder::decode_add_t2()
 {
-  di.op = ADD;
-  di.rn = REG4N();
-  di.rd = di.rn;
-  di.rm = REG4M();
+  m_di.op = ADD;
+  m_di.rn = REG4N();
+  m_di.rd = m_di.rn;
+  m_di.rm = REG4M();
 }
 
 void Decoder::decode_cmp_t1()
 {
-  di.op = CMP;
-  di.rn = REG(0);
-  di.rm = REG(3);
+  m_di.op = CMP;
+  m_di.rn = REG(0);
+  m_di.rm = REG(3);
 }
 
 void Decoder::decode_cmp_t2()
 {
-  di.op = CMP;
-  di.rn = REG4N();
-  di.rm = REG4M();
+  m_di.op = CMP;
+  m_di.rn = REG4N();
+  m_di.rm = REG4M();
 }
 
 void Decoder::decode_mov_t1()
 {
-  di.op = MOV;
-  di.rd = REG4N();
-  di.rm = REG4M();
+  m_di.op = MOV;
+  m_di.rd = REG4N();
+  m_di.rm = REG4M();
 }
 
 void Decoder::decode_mov_t2()
 {
-  di.op = MOV;
-  di.rm = REG(3);
-  di.rd = REG(0);
+  m_di.op = MOV;
+  m_di.rm = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_bx()
 {
-  di.op = BX;
-  di.rm = REG4M();
+  m_di.op = BX;
+  m_di.rm = REG4M();
 }
 
 void Decoder::decode_blx()
 {
-  di.op = BLX;
-  di.rm = REG4M();
+  m_di.op = BLX;
+  m_di.rm = REG4M();
 }
 
 void Decoder::decode_ldrl()
 {
-  di.op = LDRL;
-  di.rd = REG(8);
-  di.imm = IMM8();
+  m_di.op = LDRL;
+  m_di.rd = REG(8);
+  m_di.imm = IMM8();
 }
 
 void Decoder::decode_load_store()
 {
-  di.rm = REG(6);
-  di.rn = REG(3);
-  di.rd = REG(0);
+  m_di.rm = REG(6);
+  m_di.rn = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_str()
 {
   decode_load_store();
-  di.op = STR;
+  m_di.op = STR;
 }
 
 void Decoder::decode_strh()
 {
   decode_load_store();
-  di.op = STRH;
+  m_di.op = STRH;
 }
 
 void Decoder::decode_strb()
 {
   decode_load_store();
-  di.op = STRB;
+  m_di.op = STRB;
 }
 
 void Decoder::decode_ldrsb()
 {
   decode_load_store();
-  di.op = LDRSB;
+  m_di.op = LDRSB;
 }
 
 void Decoder::decode_ldrh()
 {
   decode_load_store();
-  di.op = LDRH;
+  m_di.op = LDRH;
 }
 
 void Decoder::decode_ldrb()
 {
   decode_load_store();
-  di.op = LDRB;
+  m_di.op = LDRB;
 }
 
 void Decoder::decode_ldrsh()
 {
   decode_load_store();
-  di.op = LDRSH;
+  m_di.op = LDRSH;
 }
 
 void Decoder::decode_ldr()
 {
   decode_load_store();
-  di.op = LDR;
+  m_di.op = LDR;
 }
 
 void Decoder::decode_load_store_imm()
 {
-  di.imm = IMM5();
-  di.rn = REG(3);
-  di.rd = REG(0);
+  m_di.imm = IMM5();
+  m_di.rn = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_ldri_t1()
 {
   decode_load_store_imm();
-  di.op = LDRI;
+  m_di.op = LDRI;
 }
 
 void Decoder::decode_stri_t1()
 {
   decode_load_store_imm();
-  di.op = STRI;
+  m_di.op = STRI;
 }
 
 void Decoder::decode_ldrbi()
 {
   decode_load_store_imm();
-  di.op = LDRBI;
+  m_di.op = LDRBI;
 }
 
 void Decoder::decode_strbi()
 {
   decode_load_store_imm();
-  di.op = STRBI;
+  m_di.op = STRBI;
 }
 
 void Decoder::decode_ldrhi()
 {
   decode_load_store_imm();
-  di.op = LDRHI;
+  m_di.op = LDRHI;
 }
 
 void Decoder::decode_strhi()
 {
   decode_load_store_imm();
-  di.op = STRHI;
+  m_di.op = STRHI;
 }
 
 void Decoder::decode_ldri_t2()
 {
-  di.imm = IMM8();
-  di.rn = 13;
-  di.rd = REG(8);
-  di.op = LDRI;
+  m_di.imm = IMM8();
+  m_di.rn = 13;
+  m_di.rd = REG(8);
+  m_di.op = LDRI;
 }
 
 void Decoder::decode_stri_t2()
 {
-  di.imm = IMM8();
-  di.rn = 13;
-  di.rd = REG(8);
-  di.op = STRI;
+  m_di.imm = IMM8();
+  m_di.rn = 13;
+  m_di.rd = REG(8);
+  m_di.op = STRI;
 }
 
 void Decoder::decode_adr()
 {
-  di.op = ADR;
-  di.rd = REG(8);
-  di.imm = IMM8();
+  m_di.op = ADR;
+  m_di.rd = REG(8);
+  m_di.imm = IMM8();
 }
 
 void Decoder::decode_addi_sp_t1()
 {
-  di.op = ADDI;
-  di.rd = REG(8);
-  di.imm = IMM8();
+  m_di.op = ADDI;
+  m_di.rd = REG(8);
+  m_di.imm = IMM8();
 }
 
 void Decoder::decode_addi_sp_t2()
 {
-  di.op = ADDI;
-  di.rd = 13;
-  di.imm = IMM7();
+  m_di.op = ADDI;
+  m_di.rd = 13;
+  m_di.imm = IMM7();
 }
 
 void Decoder::decode_subi_sp()
 {
-  di.op = SUB;
-  di.rd = 13;
-  di.imm = IMM7();
+  m_di.op = SUB;
+  m_di.rd = 13;
+  m_di.imm = IMM7();
 }
 
 void Decoder::decode_sxth()
 {
-  di.op = SXTH;
-  di.rd = REG(0);
-  di.rm = REG(3);
+  m_di.op = SXTH;
+  m_di.rd = REG(0);
+  m_di.rm = REG(3);
 }
 
 void Decoder::decode_sxtb()
 {
-  di.op = SXTB;
-  di.rd = REG(0);
-  di.rm = REG(3);
+  m_di.op = SXTB;
+  m_di.rd = REG(0);
+  m_di.rm = REG(3);
 }
 
 void Decoder::decode_uxth()
 {
-  di.op = UXTH;
-  di.rd = REG(0);
-  di.rm = REG(3);
+  m_di.op = UXTH;
+  m_di.rd = REG(0);
+  m_di.rm = REG(3);
 }
 
 void Decoder::decode_uxtb()
 {
-  di.op = UXTB;
-  di.rd = REG(0);
-  di.rm = REG(3);
+  m_di.op = UXTB;
+  m_di.rd = REG(0);
+  m_di.rm = REG(3);
 }
 
 void Decoder::decode_push()
 {
-  di.op = PUSH;
+  m_di.op = PUSH;
   unsigned int m = (m_inst >> 8) & 0x1;
-  di.specific = (m_inst & 0xFF) | m << 14;
+  m_di.specific = (m_inst & 0xFF) | m << 14;
 }
 
 void Decoder::decode_cps()
 {
-  di.op = CPS;
-  di.specific = (m_inst >> 4) & 0x1;
+  m_di.op = CPS;
+  m_di.specific = (m_inst >> 4) & 0x1;
 }
 
 void Decoder::decode_rev()
 {
-  di.op = REV;
-  di.rm = REG(3);
-  di.rd = REG(0);
+  m_di.op = REV;
+  m_di.rm = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_rev16()
 {
-  di.op = REV16;
-  di.rm = REG(3);
-  di.rd = REG(0);
+  m_di.op = REV16;
+  m_di.rm = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_revsh()
 {
-  di.op = REVSH;
-  di.rm = REG(3);
-  di.rd = REG(0);
+  m_di.op = REVSH;
+  m_di.rm = REG(3);
+  m_di.rd = REG(0);
 }
 
 void Decoder::decode_pop()
 {
-  di.op = POP;
+  m_di.op = POP;
   unsigned int p = (m_inst >> 8) & 0x1;
-  di.specific = (m_inst & 0xFF) | (p << 15);
+  m_di.specific = (m_inst & 0xFF) | (p << 15);
 }
 
 void Decoder::decode_bkpt()
 {
-  di.op = BKPT;
-  di.imm = IMM8();
+  m_di.op = BKPT;
+  m_di.imm = IMM8();
 }
 
 void Decoder::decode_nop()
 {
-  di.op = NOP;
+  m_di.op = NOP;
 }
 
 void Decoder::decode_yield()
 {
-  di.op = YIELD;
+  m_di.op = YIELD;
 }
 
 void Decoder::decode_wfe()
 {
-  di.op = WFE;
+  m_di.op = WFE;
 }
 
 void Decoder::decode_wfi()
 {
-  di.op = WFI;
+  m_di.op = WFI;
 }
 
 void Decoder::decode_sev()
 {
-  di.op = SEV;
+  m_di.op = SEV;
 }
 
 void Decoder::decode_stm()
 {
-  di.op = STM;
-  di.rn = REG(8);
-  di.specific = m_inst & 0xFF;
+  m_di.op = STM;
+  m_di.rn = REG(8);
+  m_di.specific = m_inst & 0xFF;
 }
 
 void Decoder::decode_ldm()
 {
-  di.op = LDM;
-  di.rn = REG(8);
-  di.specific = m_inst & 0xFF;
+  m_di.op = LDM;
+  m_di.rn = REG(8);
+  m_di.specific = m_inst & 0xFF;
 }
 
 void Decoder::decode_udf()
 {
-  di.op = UDF;
+  m_di.op = UDF;
 }
 
 void Decoder::decode_svn()
 {
-  di.op = SVC;
-  di.imm = IMM8();
+  m_di.op = SVC;
+  m_di.imm = IMM8();
 }
 
 void Decoder::decode_b_t1()
 {
-  di.op = BCOND;
-  di.imm = SIMM8() << 1;
-  di.specific = (m_inst >> 8) & 0xF;
+  m_di.op = BCOND;
+  m_di.imm = SIMM8() << 1;
+  m_di.specific = (m_inst >> 8) & 0xF;
 }
 
 void Decoder::decode_b_t2()
 {
-  di.op = BCOND;
-  di.imm = SIMM11() << 1;
-  di.specific = COND_AL;
+  m_di.op = BCOND;
+  m_di.imm = SIMM11() << 1;
+  m_di.specific = COND_AL;
 }
 
 void Decoder::decode_svc()
 {
-  di.op = SVC;
-  di.imm = IMM8();
+  m_di.op = SVC;
+  m_di.imm = IMM8();
 }
 
 const Decoder32Tab Decoder::m_decode32_table[] = {
@@ -685,47 +691,47 @@ void Decoder::decode_bl()
   uint32_t imm11 = (LO16() & 0x7FF);
   uint32_t imm10 = (HI16() & 0x3FF);
 
-  di.imm |= imm11 << 1;
-  di.imm |= imm10 << 12;
-  di.imm |= i2 << 22;
-  di.imm |= i1 << 23;
-  di.imm |= s << 24;
-  di.imm = ((int32_t)(di.imm << 7)) >> 7;
-  di.op = BL;
+  m_di.imm |= imm11 << 1;
+  m_di.imm |= imm10 << 12;
+  m_di.imm |= i2 << 22;
+  m_di.imm |= i1 << 23;
+  m_di.imm |= s << 24;
+  m_di.imm = ((int32_t)(m_di.imm << 7)) >> 7;
+  m_di.op = BL;
 }
 
 void Decoder::decode_msr()
 {
-  di.op = MSR;
-  di.rn = REG4(16);
-  di.specific = LO16() & 0xFF;
+  m_di.op = MSR;
+  m_di.rn = REG4(16);
+  m_di.specific = LO16() & 0xFF;
 }
 
 void Decoder::decode_dsb()
 {
-  di.op = DSB;
+  m_di.op = DSB;
 }
 
 void Decoder::decode_dmb()
 {
-  di.op = DMB;
+  m_di.op = DMB;
 }
 
 void Decoder::decode_isb()
 {
-  di.op = ISB;
+  m_di.op = ISB;
 }
 
 void Decoder::decode_mrs()
 {
-  di.op = MRS;
-  di.rd = REG4(16);
-  di.specific = LO16() & 0xFF;
+  m_di.op = MRS;
+  m_di.rd = REG4(16);
+  m_di.specific = LO16() & 0xFF;
 }
 
 void Decoder::decode_udf32()
 {
-  di.op = UDF;
+  m_di.op = UDF;
 }
 
 void Decoder::decode_inst32()

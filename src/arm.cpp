@@ -33,13 +33,11 @@ void CortexM0::execute()
   m_regs[15] += 2;
 
   if (!IS_32BIT(inst)) {
-    Decoder decoder(inst, 0);
-    di = decoder.di;
+    di = decoder.decode(inst, 0);
   } else {
-    Decoder decoder(inst, 1);
     inst32 = (((uint32_t) inst) << 16) | fetch_inst();
     m_regs[15] += 2;
-    di = decoder.di;
+    di = decoder.decode(inst, 1);
   }
 
   switch (di.op) {

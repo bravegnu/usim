@@ -68,6 +68,7 @@ struct DecodedInst {
   uint8_t rm;
   int32_t imm;
   uint16_t specific;
+  bool setflags;
 };
 
 class Decoder;
@@ -88,6 +89,7 @@ class Decoder {
 private:
   uint32_t m_inst;
   bool m_is32;
+  DecodedInst m_di;
   static const DecoderTab m_decode_table[DECODE_TAB_SIZE];
   static const Decoder32Tab m_decode32_table[DECODE32_TAB_SIZE];
 
@@ -244,8 +246,8 @@ private:
   }
 
 public:
-  DecodedInst di;
-  Decoder(uint32_t inst, bool is32);
+  Decoder();
+  DecodedInst decode(uint32_t inst, bool is32);
 };
 
 #endif
