@@ -52,6 +52,7 @@ const DecoderTab Decoder::m_decode_table[] = {
   { TM( 6), PTN(0b0100000000,  6), &Decoder::decode_and     },
   { TM(11), PTN(0b00010,      11), &Decoder::decode_asri    },
   { TM( 6), PTN(0b0100000100,  6), &Decoder::decode_asr     },
+  { TM( 8), PTN(0b11011111,    8), &Decoder::decode_svc     },
   { TM(12), PTN(0b1101,       12), &Decoder::decode_b_t1    },
   { TM(11), PTN(0b11100,      11), &Decoder::decode_b_t2    },
   { TM( 6), PTN(0b0100001110,  6), &Decoder::decode_bic     },
@@ -106,7 +107,6 @@ const DecoderTab Decoder::m_decode_table[] = {
   { TM(11), PTN(0b00111,      11), &Decoder::decode_subi_t2 },
   { TM( 9), PTN(0b0001101,     9), &Decoder::decode_sub     },
   { TM( 7), PTN(0b101100001,   7), &Decoder::decode_subi_sp },
-  { TM( 8), PTN(0b11011111,    8), &Decoder::decode_svc     },
   { TM( 6), PTN(0b1011001001,  6), &Decoder::decode_sxtb    },
   { TM( 6), PTN(0b1011001000,  6), &Decoder::decode_sxth    },
   { TM( 6), PTN(0b0100001000,  6), &Decoder::decode_tst     },
@@ -140,6 +140,7 @@ void Decoder::decode_lsli()
   m_di.rd = REG(0);
   m_di.rm = REG(3);
   m_di.imm = IMM5();
+  m_di.setflags = true;
 }
 
 void Decoder::decode_lsri()
@@ -151,6 +152,7 @@ void Decoder::decode_lsri()
     m_di.imm = 32;
   else
     m_di.imm = IMM5();
+  m_di.setflags = true;
 }
 
 void Decoder::decode_asri()
@@ -162,6 +164,7 @@ void Decoder::decode_asri()
     m_di.imm = 32;
   else
     m_di.imm = IMM5();
+  m_di.setflags = true;
 }
 
 void Decoder::decode_add_t1()
@@ -170,6 +173,7 @@ void Decoder::decode_add_t1()
   m_di.rm = REG(6);
   m_di.rn = REG(3);
   m_di.rd = REG(0);
+  m_di.setflags = true;
 }
 
 void Decoder::decode_sub()
@@ -178,6 +182,7 @@ void Decoder::decode_sub()
   m_di.rm = REG(6);
   m_di.rn = REG(3);
   m_di.rd = REG(0);
+  m_di.setflags = true;
 }
 
 void Decoder::decode_addi_t1()
@@ -186,6 +191,7 @@ void Decoder::decode_addi_t1()
   m_di.imm = IMM3();
   m_di.rn = REG(3);
   m_di.rd = REG(0);
+  m_di.setflags = true;
 }
 
 void Decoder::decode_subi_t1()
@@ -194,6 +200,7 @@ void Decoder::decode_subi_t1()
   m_di.imm = IMM3();
   m_di.rn = REG(3);
   m_di.rd = REG(0);
+  m_di.setflags = true;
 }
 
 void Decoder::decode_movi()
@@ -201,6 +208,7 @@ void Decoder::decode_movi()
   m_di.op = MOV;
   m_di.rd = REG(8);
   m_di.imm = IMM8();
+  m_di.setflags = true;
 }
 
 void Decoder::decode_cmpi()
@@ -208,6 +216,7 @@ void Decoder::decode_cmpi()
   m_di.op = CMP;
   m_di.rn = REG(8);
   m_di.imm = IMM8();
+  m_di.setflags = true;
 }
 
 void Decoder::decode_addi_t2()
@@ -216,6 +225,7 @@ void Decoder::decode_addi_t2()
   m_di.rd = REG(8);
   m_di.rn = m_di.rd;
   m_di.imm = IMM8();
+  m_di.setflags = true;
 }
 
 void Decoder::decode_subi_t2()
@@ -224,6 +234,7 @@ void Decoder::decode_subi_t2()
   m_di.rd = REG(8);
   m_di.rn = m_di.rd;
   m_di.imm = IMM8();
+  m_di.setflags = true;
 }
 
 void Decoder::decode_dproc()
@@ -237,48 +248,56 @@ void Decoder::decode_and()
 {
   decode_dproc();
   m_di.op = AND;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_eor()
 {
   decode_dproc();
   m_di.op = EOR;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_lsl()
 {
   decode_dproc();
   m_di.op = LSL;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_lsr()
 {
   decode_dproc();
   m_di.op = LSR;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_asr()
 {
   decode_dproc();
   m_di.op = ASR;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_adc()
 {
   decode_dproc();
   m_di.op = ADC;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_sbc()
 {
   decode_dproc();
   m_di.op = SBC;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_ror()
 {
   decode_dproc();
   m_di.op = ROR;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_tst()
@@ -291,42 +310,42 @@ void Decoder::decode_rsb()
 {
   decode_dproc();
   m_di.op = RSB;
-}
-
-void Decoder::decode_cmp()
-{
-  decode_dproc();
-  m_di.op = CMP;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_cmn()
 {
   decode_dproc();
   m_di.op = CMN;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_orr()
 {
   decode_dproc();
   m_di.op = ORR;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_mul()
 {
   decode_dproc();
   m_di.op = MUL;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_bic()
 {
   decode_dproc();
   m_di.op = BIC;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_mvn()
 {
   decode_dproc();
   m_di.op = MVN;
+  m_di.setflags = true;
 }
 
 void Decoder::decode_add_t2()
@@ -335,6 +354,7 @@ void Decoder::decode_add_t2()
   m_di.rn = REG4N();
   m_di.rd = m_di.rn;
   m_di.rm = REG4M();
+  m_di.setflags = false;
 }
 
 void Decoder::decode_cmp_t1()
@@ -342,6 +362,7 @@ void Decoder::decode_cmp_t1()
   m_di.op = CMP;
   m_di.rn = REG(0);
   m_di.rm = REG(3);
+  m_di.setflags = true;
 }
 
 void Decoder::decode_cmp_t2()
@@ -349,6 +370,7 @@ void Decoder::decode_cmp_t2()
   m_di.op = CMP;
   m_di.rn = REG4N();
   m_di.rm = REG4M();
+  m_di.setflags = true;
 }
 
 void Decoder::decode_mov_t1()
@@ -356,6 +378,7 @@ void Decoder::decode_mov_t1()
   m_di.op = MOV;
   m_di.rd = REG4N();
   m_di.rm = REG4M();
+  m_di.setflags = false;
 }
 
 void Decoder::decode_mov_t2()
@@ -363,6 +386,7 @@ void Decoder::decode_mov_t2()
   m_di.op = MOV;
   m_di.rm = REG(3);
   m_di.rd = REG(0);
+  m_di.setflags = true;
 }
 
 void Decoder::decode_bx()
@@ -526,6 +550,7 @@ void Decoder::decode_addi_sp_t1()
   m_di.op = ADDI;
   m_di.rd = REG(8);
   m_di.imm = IMM8();
+  m_di.setflags = false;
 }
 
 void Decoder::decode_addi_sp_t2()
@@ -533,6 +558,7 @@ void Decoder::decode_addi_sp_t2()
   m_di.op = ADDI;
   m_di.rd = 13;
   m_di.imm = IMM7();
+  m_di.setflags = false;
 }
 
 void Decoder::decode_subi_sp()
@@ -540,6 +566,7 @@ void Decoder::decode_subi_sp()
   m_di.op = SUB;
   m_di.rd = 13;
   m_di.imm = IMM7();
+  m_di.setflags = false;
 }
 
 void Decoder::decode_sxth()
@@ -661,7 +688,7 @@ void Decoder::decode_udf()
   m_di.op = UDF;
 }
 
-void Decoder::decode_svn()
+void Decoder::decode_svc()
 {
   m_di.op = SVC;
   m_di.imm = IMM8();
@@ -679,12 +706,6 @@ void Decoder::decode_b_t2()
   m_di.op = BCOND;
   m_di.imm = SIMM11() << 1;
   m_di.specific = COND_AL;
-}
-
-void Decoder::decode_svc()
-{
-  m_di.op = SVC;
-  m_di.imm = IMM8();
 }
 
 const Decoder32Tab Decoder::m_decode32_table[] = {

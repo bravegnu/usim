@@ -172,7 +172,6 @@ private:
   void decode_stm();
   void decode_ldm();
   void decode_udf();
-  void decode_svn();
   void decode_b_t1();
   void decode_b_t2();
   void decode_svc();
