@@ -21,17 +21,9 @@ enum Cond {
   COND_AL,
 };
 
-enum ShiftType {
-  SHIFT_LSL,
-  SHIFT_LSR,
-  SHIFT_ASR,
-  SHIFT_RRX,
-  SHIFT_ROR,
-};
-
 enum Op {
   /* Data Processing */
-  LSLI, LSRI, ASRI, ADD, SUB, ADDI, SUBI, MOV, CMPI,
+  LSLI, LSRI, ASRI, ADD, SUB, ADDI, SUBI, MOV, MOVI, CMPI,
   AND, EOR, LSL, LSR, ASR, ADC, SBC, ROR, TST, RSB, CMP, CMN,
   ORR, MUL, BIC, MVN,
 
@@ -56,6 +48,8 @@ enum Op {
 
   /* Undefined */
   UDF,
+
+  OP_MAX
 };
 
 #define DECODE_TAB_SIZE 77

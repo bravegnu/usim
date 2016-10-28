@@ -1,9 +1,11 @@
 #include "arm.h"
 #include "decoder.h"
+#include "alu.h"
 #include <iostream>
 #include <iomanip>
 
 CortexM0::CortexM0(Clock& clock, SystemBus *sysbus)
+    : alu(m_regs, &m_c, &m_o, &m_n, &m_z)
 {
   clock.add_clocked(this);
   m_sysbus = sysbus;
@@ -11,6 +13,11 @@ CortexM0::CortexM0(Clock& clock, SystemBus *sysbus)
   for (auto i = 0; i < CortexM0::MAX_REGS; i++) {
     m_regs[i] = 0;
   }
+
+  m_c = 0;
+  m_o = 0;
+  m_n = 0;
+  m_z = 0;
 }
 
 uint16_t CortexM0::fetch_inst()
@@ -40,14 +47,7 @@ void CortexM0::execute()
     di = decoder.decode(inst, 1);
   }
 
-  switch (di.op) {
-  case MOV:
-    m_regs[di.rd] = di.imm;
-    break;
-  case ADD:
-    m_regs[di.rd] = m_regs[di.rm] + m_regs[di.rn];
-    break;
-  }
+  alu.execute(&di);
 }
   
 void CortexM0::dump_regs()

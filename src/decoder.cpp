@@ -205,7 +205,7 @@ void Decoder::decode_subi_t1()
 
 void Decoder::decode_movi()
 {
-  m_di.op = MOV;
+  m_di.op = MOVI;
   m_di.rd = REG(8);
   m_di.imm = IMM8();
   m_di.setflags = true;
@@ -802,4 +802,3 @@ void Decoder::decode_inst()
     }
   }
 }
-

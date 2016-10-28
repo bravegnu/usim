@@ -1,6 +1,6 @@
 all: usim add.bin
 
-usim: memory.o sysbus.o clock.o arm.o main.o decoder.o
+usim: memory.o sysbus.o clock.o arm.o main.o decoder.o alu.o
 	g++ -o $@ $^
 
 %.o: %.cpp
