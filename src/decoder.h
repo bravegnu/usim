@@ -19,12 +19,13 @@ enum Cond {
   COND_GT,
   COND_LE,
   COND_AL,
+  COND_UNDEF,
 };
 
 enum Op {
   /* Data Processing */
   LSLI, LSRI, ASRI, ADD, SUB, ADDI, SUBI, MOV, MOVI, CMPI,
-  AND, EOR, LSL, LSR, ASR, ADC, SBC, ROR, TST, RSB, CMP, CMN,
+  AND, EOR, LSL, LSR, ASR, ADC, SBC, ROR, TST, RSBI, CMP, CMN,
   ORR, MUL, BIC, MVN,
 
   /* Relative Addressing */

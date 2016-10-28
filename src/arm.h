@@ -16,6 +16,8 @@ class CortexM0: public ClockedIf
   bool m_o;
   bool m_n;
   bool m_z;
+  uint32_t m_addr;
+  uint32_t m_data;
   
   SystemBus *m_sysbus;
   uint16_t fetch_inst();

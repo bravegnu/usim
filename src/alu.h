@@ -23,24 +23,30 @@ class ALU
  private:
   uint32_t *m_regs;
   bool *m_c;
-  bool *m_o;
+  bool *m_v;
   bool *m_n;
   bool *m_z;
+  uint32_t *m_addr;
+  uint32_t *m_data;
   DecodedInst m_i;
   static const ALUOp alu_ops[OP_MAX];
 
-  uint32_t add_with_carry(uint32_t x, uint32_t y, bool carry_in, bool *carry_out, bool *overflow);
+  uint32_t add_with_carry(uint32_t x, uint32_t y, bool carry_in,
+                          bool *carry_out, bool *overflow);
   void set_flags_nzcv(uint32_t result, bool carry, bool overflow);
   void set_flags_nzc(uint32_t result, bool carry);
+  void set_flags_nz(uint32_t result);
   uint32_t lsl_c(uint32_t value, unsigned amount, bool *carry_out);
   uint32_t lsr_c(uint32_t value, unsigned amount, bool *carry_out);
   uint32_t asr_c(uint32_t value, unsigned amount, bool *carry_out);
-
+  uint32_t ror_c(uint32_t value, unsigned amount, bool *carry_out);  
+  void alu_write_pc(uint32_t address);
+  void branch_write_pc(uint32_t address);
+  bool condition_passed(enum Cond cond);
+  
   void exec_shifti_op();
-  void exec_add();
-  void exec_sub();
-  void exec_addi();
-  void exec_subi();
+  void exec_add_sub();
+  void exec_addi_subi();
   void exec_movi();
   void exec_mov();
   void exec_cmpi();
@@ -105,7 +111,8 @@ class ALU
   void exec_udf();
   
  public:
-  ALU(uint32_t *regs, bool *c, bool *o, bool *n, bool *z);
+  ALU(uint32_t *regs, bool *c, bool *o, bool *n, bool *z,
+      uint32_t *addr, uint32_t *data);
   void execute(DecodedInst const *inst);
 };
 

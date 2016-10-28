@@ -5,14 +5,13 @@
 #include <iomanip>
 
 CortexM0::CortexM0(Clock& clock, SystemBus *sysbus)
-    : alu(m_regs, &m_c, &m_o, &m_n, &m_z)
+    : alu(m_regs, &m_c, &m_o, &m_n, &m_z, &m_addr, &m_data)
 {
   clock.add_clocked(this);
   m_sysbus = sysbus;
 
-  for (auto i = 0; i < CortexM0::MAX_REGS; i++) {
+  for (auto i = 0; i < CortexM0::MAX_REGS; i++)
     m_regs[i] = 0;
-  }
 
   m_c = 0;
   m_o = 0;
