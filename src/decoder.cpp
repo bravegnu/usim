@@ -42,12 +42,12 @@ const DecoderTab Decoder::m_decode_table[] = {
   { TM( 6), PTN(0b0100000101,  6), &Decoder::decode_adc     },
   { TM( 9), PTN(0b0001110,     9), &Decoder::decode_addi_t1 },
   { TM(11), PTN(0b00110,      11), &Decoder::decode_addi_t2 },
+  { TM( 8) | BM(6, 3), PTN(0b0100010001101, 3), &Decoder::decode_add_sp_t1 },
+  { TM( 7), PTN(0b010001001,   7), &Decoder::decode_add_sp_t2 },
   { TM( 9), PTN(0b0001100,     9), &Decoder::decode_add_t1  },
   { TM( 8), PTN(0b01000100,    8), &Decoder::decode_add_t2  },
   { TM(11), PTN(0b10101,      11), &Decoder::decode_addi_sp_t1 },
   { TM( 7), PTN(0b101100000,   7), &Decoder::decode_addi_sp_t2 },
-  { TM( 8) | BM(6, 3), PTN(0b0100010001101, 3), &Decoder::decode_addi_sp_t1 },
-  { TM( 7), PTN(0b010001001,   7), &Decoder::decode_addi_sp_t2 },
   { TM(11), PTN(0b10100,      11), &Decoder::decode_adr     },
   { TM( 6), PTN(0b0100000000,  6), &Decoder::decode_and     },
   { TM(11), PTN(0b00010,      11), &Decoder::decode_asri    },
@@ -503,6 +503,22 @@ void Decoder::decode_adr()
   m_di.op = ADR;
   m_di.rd = REG(8);
   m_di.imm = IMM8();
+}
+
+void Decoder::decode_add_sp_t1()
+{
+  m_di.op = ADD;
+  m_di.rd = REG4N();
+  m_di.rm = m_di.rd;
+  m_di.setflags = false;
+}
+
+void Decoder::decode_add_sp_t2()
+{
+  m_di.op = ADD;
+  m_di.rd = 13;
+  m_di.rm = REG4M();
+  m_di.setflags = false;
 }
 
 void Decoder::decode_addi_sp_t1()

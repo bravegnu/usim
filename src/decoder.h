@@ -148,6 +148,8 @@ private:
   void decode_ldri_t1();
   void decode_stri_t1();
   void decode_adr();
+  void decode_add_sp_t1();
+  void decode_add_sp_t2();
   void decode_addi_sp_t1();
   void decode_addi_sp_t2();
   void decode_subi_sp();
