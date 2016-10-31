@@ -92,7 +92,7 @@ const DecoderTab Decoder::m_decode_table[] = {
   { TM( 6), PTN(0b1011101001,  6), &Decoder::decode_rev16   },
   { TM( 6), PTN(0b1011101011,  6), &Decoder::decode_revsh   },
   { TM( 6), PTN(0b0100000111,  6), &Decoder::decode_ror     },
-  { TM( 6), PTN(0b0100001001,  6), &Decoder::decode_rsb     },
+  { TM( 6), PTN(0b0100001001,  6), &Decoder::decode_rsbi    },
   { TM( 6), PTN(0b0100000110,  6), &Decoder::decode_sbc     },
   { TM( 0), PTN(0b1011111101000000, 0), &Decoder::decode_sev },
   { TM(11), PTN(0b11000,      11), &Decoder::decode_stm     },
@@ -306,10 +306,12 @@ void Decoder::decode_tst()
   m_di.op = TST;
 }
 
-void Decoder::decode_rsb()
+void Decoder::decode_rsbi()
 {
-  decode_dproc();
-  m_di.op = RSB;
+  m_di.op = RSBI;
+  m_di.rd = REG(0);
+  m_di.rn = REG(3);
+  m_di.imm = 0;
   m_di.setflags = true;
 }
 
