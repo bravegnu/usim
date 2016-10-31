@@ -109,7 +109,7 @@ private:
   void decode_sbc();
   void decode_ror();
   void decode_tst();
-  void decode_rsb();
+  void decode_rsbi();
   void decode_cmp();
   void decode_cmn();
   void decode_orr();
