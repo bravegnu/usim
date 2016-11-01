@@ -36,10 +36,9 @@ void Memory::write32(uint32_t addr, uint32_t data)
 
 void Memory::load_bin(char const *filename, uint32_t offset)
 {
-  std::ifstream infile;
   uint32_t size = m_size_kb * 1024;
 
-  infile.open(filename);
+  std::ifstream infile(filename, std::ios::binary);
 
   if (!infile) {
     std::ostringstream message;
