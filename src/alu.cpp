@@ -155,7 +155,7 @@ void ALU::set_flags_nz(uint32_t result)
 {
   if (m_i.setflags) {
     *m_n = result >> 31;
-    *m_z = !!result;
+    *m_z = !result;
   }
 }
 
