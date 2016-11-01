@@ -1,6 +1,11 @@
-all: usim add.bin
+all: usim core-test add.bin
 
-usim: memory.o sysbus.o clock.o arm.o main.o decoder.o alu.o
+objs = memory.o sysbus.o clock.o arm.o decoder.o alu.o debug.o
+
+usim: main.o $(objs)
+	g++ -o $@ $^
+
+core-test: core-test.o $(objs)
 	g++ -o $@ $^
 
 %.o: %.cpp

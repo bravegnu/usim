@@ -24,6 +24,4 @@ int main()
   clock.tick();
   clock.tick();
   clock.tick();
-
-  cpu.dump_regs();
 }

@@ -6,6 +6,7 @@
 #include "sysbus.h"
 #include "decoder.h"
 #include "alu.h"
+#include "debug.h"
 
 class CortexM0: public ClockedIf
 {
@@ -18,15 +19,19 @@ class CortexM0: public ClockedIf
   bool m_z;
   uint32_t m_addr;
   uint32_t m_data;
+  bool m_halted;
   
   SystemBus *m_sysbus;
-  uint16_t fetch_inst();
   Decoder decoder;
   ALU alu;
+
+  uint16_t fetch_inst();
  public:
+  Debug debug;
+  
   CortexM0(Clock& clock, SystemBus *sysbus);
   void execute();
-  void dump_regs();
+  bool is_halted();
 };
 
 #endif

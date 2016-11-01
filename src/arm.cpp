@@ -6,6 +6,7 @@
 
 CortexM0::CortexM0(Clock& clock, SystemBus *sysbus)
     : alu(m_regs, &m_c, &m_o, &m_n, &m_z, &m_addr, &m_data)
+    , debug(m_regs, &m_c, &m_o, &m_n, &m_z, sysbus)
 {
   clock.add_clocked(this);
   m_sysbus = sysbus;
@@ -46,13 +47,15 @@ void CortexM0::execute()
     di = decoder.decode(inst, 1);
   }
 
-  alu.execute(&di);
-}
-  
-void CortexM0::dump_regs()
-{
-  for (auto i = 0; i < CortexM0::MAX_REGS; i++) {
-    std::cout << "r" << std::dec << i << ": " << std::hex
-	      << m_regs[i] << std::endl;
+  if (di.op == BKPT) {
+    m_halted = true;
+    return;
+  } else {
+    alu.execute(&di);
   }
+}
+
+bool CortexM0::is_halted()
+{
+  return m_halted;
 }
