@@ -47,13 +47,16 @@ void Memory::load_bin(char const *filename, uint32_t offset)
     throw IOError(errno, message.str());
   }
 
-  while (!infile.eof()) {
-    uint8_t byte;
+  while (true) {
+    uint8_t byte = 0;
 
     if (offset >= size)
       break;
 
-    infile >> byte;
+    byte = infile.get();
+    if (infile.eof())
+      break;
+
     m_memory[offset] = byte;
     offset++;
   }
