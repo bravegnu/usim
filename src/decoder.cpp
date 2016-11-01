@@ -43,7 +43,7 @@ const DecoderTab Decoder::m_decode_table[] = {
   { TM( 9), PTN(0b0001110,     9), &Decoder::decode_addi_t1 },
   { TM(11), PTN(0b00110,      11), &Decoder::decode_addi_t2 },
   { TM( 8) | BM(6, 3), PTN(0b0100010001101, 3), &Decoder::decode_add_sp_t1 },
-  { TM( 7), PTN(0b010001001,   7), &Decoder::decode_add_sp_t2 },
+  { TM( 7) | BM(2, 0), PTN(0b0100010010000101, 0), &Decoder::decode_add_sp_t2 },
   { TM( 9), PTN(0b0001100,     9), &Decoder::decode_add_t1  },
   { TM( 8), PTN(0b01000100,    8), &Decoder::decode_add_t2  },
   { TM(11), PTN(0b10101,      11), &Decoder::decode_addi_sp_t1 },
