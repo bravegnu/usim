@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <cerrno>
+#include <cstring>
 #include "memory.h"
 #include "sysbus.h"
 #include "utils.h"
@@ -9,6 +10,7 @@
 Memory::Memory(unsigned int size_kb)
 {
   m_memory = new uint8_t[size_kb * 1024];
+  std::memset(m_memory, 0, size_kb * 1024);
   m_size_kb = size_kb;
 }
 
