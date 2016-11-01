@@ -1,0 +1,8 @@
+name: Add Result Test
+given:
+  r0: -1
+  r1: 1
+when: |
+  add r1, r0
+then:
+  r1: 0
