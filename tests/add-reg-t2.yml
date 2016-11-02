@@ -1,0 +1,11 @@
+name: ADD (Register) Encoding T2
+given:
+  r10: -1
+  r11: 1
+when: |
+  add r11, r10
+then:
+  r11: 0
+  r10: 0xFFFFFFFF
+  z: 0
+  c: 0

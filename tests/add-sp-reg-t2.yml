@@ -1,0 +1,11 @@
+name: ADD (SP plus Register) Encoding T2
+given:
+  r0: -1
+  r13: 1
+when: |
+  add sp, r0
+then:
+  r0: 0xFFFFFFFF
+  r13: 0
+  z: 0
+  c: 0
