@@ -7,6 +7,8 @@ read-0() {
     done
 }
 
+count=0
+
 for file in *.yml
 do
     base=$(basename $file .yml)
@@ -20,4 +22,8 @@ do
 	    grep "${key} ${value}" ${base}.output > /dev/null ||
 	        echo "FAILED:" $(shyaml get-value name ${file} < ${file})
 	done
+
+    let count=count+1
 done
+
+echo Ran ${count} tests.
