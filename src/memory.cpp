@@ -34,7 +34,7 @@ void Memory::write32(uint32_t addr, uint32_t data)
   m_memory[addr + 3] = (data >> 24) & 0xFF;
 }
 
-void Memory::load_bin(char const *filename, uint32_t offset)
+void Memory::load_bin(std::string filename, uint32_t offset)
 {
   uint32_t size = m_size_kb * 1024;
 

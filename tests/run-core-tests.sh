@@ -15,8 +15,8 @@ do
     cat ${file} | shyaml get-value when > ${base}.s
     echo "bkpt" >> ${base}.s
     arm-none-eabi-gcc -nostdlib -Ttext=0x0 -mcpu=cortex-m0 ${base}.s -o ${base}.elf > ${base}.build 2>&1
-    arm-none-eabi-objcopy ${base}.elf -O binary test.bin >> ${base}.build 2>&1
-    cat ${file} | shyaml key-values given | ../src/core-test > ${base}.output
+    arm-none-eabi-objcopy ${base}.elf -O binary ${base}.bin >> ${base}.build 2>&1
+    cat ${file} | shyaml key-values given | ../src/core-test ${base}.bin > ${base}.output
     cat ${file} | shyaml key-values-0 then |
     	while read-0 key value; do
 	    grep "${key} ${value}" ${base}.output > /dev/null ||

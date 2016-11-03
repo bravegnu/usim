@@ -62,17 +62,24 @@ void load_state(Debug *debug)
   }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
   SystemBus bus;
   Clock clock;
+
+  if (argc != 2) {
+    std::cerr << "Usage: core-test <bin-filename>" << std::endl;
+    return 1;
+  }
+
+  std::string bin_filename = argv[1];
 
   /* Initialize CPU */
   CortexM0 cpu(clock, &bus);
 
   /* Initialize Flash */
   Memory flash(1);
-  flash.load_bin("test.bin", 0);
+  flash.load_bin(bin_filename, 0);
   bus.register_device(0x00000000, &flash);
 
   /* Initialize SRAM */

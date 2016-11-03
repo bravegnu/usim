@@ -2,6 +2,7 @@
 #define MEMORY_H
 
 #include "device.h"
+#include <string>
 #include <cstdint>
 
 class Memory: public DeviceIf
@@ -12,7 +13,7 @@ class Memory: public DeviceIf
   uint32_t m_base_addr;
  public:
   Memory(unsigned int size_kb);
-  void load_bin(char const *filename, uint32_t offset);
+  void load_bin(std::string filename, uint32_t offset);
   uint32_t read32(uint32_t addr);
   void write32(uint32_t addr, uint32_t data);
   uint32_t get_size();
