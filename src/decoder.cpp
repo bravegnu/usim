@@ -536,6 +536,7 @@ void Decoder::decode_add_sp_t1()
   m_di.op = ADD;
   m_di.rd = REG4N();
   m_di.rm = m_di.rd;
+  m_di.rn = 13;
   m_di.setflags = false;
 }
 
@@ -544,6 +545,7 @@ void Decoder::decode_add_sp_t2()
   m_di.op = ADD;
   m_di.rd = 13;
   m_di.rm = REG4M();
+  m_di.rn = 13;
   m_di.setflags = false;
 }
 
