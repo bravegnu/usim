@@ -553,7 +553,8 @@ void Decoder::decode_addi_sp_t1()
 {
   m_di.op = ADDI;
   m_di.rd = REG(8);
-  m_di.imm = IMM8();
+  m_di.rn = 13;
+  m_di.imm = IMM8() << 2;
   m_di.setflags = false;
 }
 
@@ -561,7 +562,8 @@ void Decoder::decode_addi_sp_t2()
 {
   m_di.op = ADDI;
   m_di.rd = 13;
-  m_di.imm = IMM7();
+  m_di.rn = 13;
+  m_di.imm = IMM7() << 2;
   m_di.setflags = false;
 }
 
