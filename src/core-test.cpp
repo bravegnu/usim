@@ -47,9 +47,13 @@ void load_state(Debug *debug)
   std::string param;
   uint32_t value;
 
-  while (std::cin) {
+  while (true) {
     std::cin >> param;
+    if (std::cin.eof())
+      return;
     std::cin >> value;
+    if (std::cin.eof())
+      return;
 
     if (param.length() == 1 and is_flag(param[0])) {
       debug->set_flag(param[0], value);
