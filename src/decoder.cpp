@@ -528,7 +528,7 @@ void Decoder::decode_adr()
 {
   m_di.op = ADR;
   m_di.rd = REG(8);
-  m_di.imm = IMM8();
+  m_di.imm = IMM8() << 2;
 }
 
 void Decoder::decode_add_sp_t1()
