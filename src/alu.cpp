@@ -403,7 +403,8 @@ bool ALU::condition_passed(enum Cond cond)
       result = (*m_n == *m_v) && (*m_z == 0);
       break;
     case 0b111:
-      result = !result;
+      result = true;
+      break;
     default:
       assert("invalid condition");
   }
