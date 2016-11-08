@@ -137,7 +137,7 @@ uint32_t ALU::asr_c(uint32_t value, unsigned amount, bool *carry_out)
   int32_t svalue = value;
 
   *carry_out = !!(value & (1 << (amount-1)));
-  return (value >> amount);
+  return (svalue >> amount);
 }
 
 uint32_t ALU::ror_c(uint32_t value, unsigned amount, bool *carry_out)
