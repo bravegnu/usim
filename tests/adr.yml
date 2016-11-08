@@ -1,0 +1,8 @@
+name: ADR
+given: {}
+when: |
+  add r1, pc, #4
+then:
+  r1: 4
+  c: 0
+  z: 0

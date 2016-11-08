@@ -1,0 +1,11 @@
+name: ASR (immediate)
+given:
+  r0: 0xFFFFFFFE
+  c: 1
+when: |
+  asr r1, r0, #1
+then:
+  r1: 0xFFFFFFFF
+  n: 1
+  c: 0
+  

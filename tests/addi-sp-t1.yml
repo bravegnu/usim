@@ -1,0 +1,9 @@
+name: ADD (SP plus immediate) Encoding T1
+given:
+  r13: -0x3FC
+when: |
+  add r1, r13, #0x3FC
+then:
+  r1: 0
+  c: 0
+  z: 0

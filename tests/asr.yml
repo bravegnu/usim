@@ -1,0 +1,11 @@
+name: ASR (register)
+given:
+  r0: 0xFFFFFFFF
+  r1: 1
+when: |
+  asr r0, r0, r1
+then:
+  r0: 0xFFFFFFFF
+  c: 1
+  n: 1
+  

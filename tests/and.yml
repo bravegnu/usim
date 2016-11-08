@@ -1,0 +1,9 @@
+name: AND (register)
+given:
+  r0: 0xAA
+  r1: 0x55
+when: |
+  and r0, r1
+then:
+  r0: 0
+  z: 1

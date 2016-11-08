@@ -1,0 +1,10 @@
+name: ADD (immediate) Encoding T1
+given:
+  r1: -7
+when: |
+  add r0, r1, #7
+then:
+  r0: 0
+  c: 1
+  z: 1
+  
