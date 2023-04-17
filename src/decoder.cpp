@@ -728,7 +728,7 @@ void Decoder::decode_bl()
 {
   unsigned int s = (HI16() >> 10) & 0x1;
   unsigned int j1 = (LO16() >> 13) & 0x1;
-  unsigned int j2 = (LO16() >> 13) & 0x1;
+  unsigned int j2 = (LO16() >> 11) & 0x1;
   unsigned int i1 = !(j1 ^ s);
   unsigned int i2 = !(j2 ^ s);
   uint32_t imm11 = (LO16() & 0x7FF);

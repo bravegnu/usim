@@ -44,7 +44,7 @@ void CortexM0::execute()
   } else {
     inst32 = (((uint32_t) inst) << 16) | fetch_inst();
     m_regs[15] += 2;
-    di = decoder.decode(inst, 1);
+    di = decoder.decode(inst32, 1);
   }
 
   if (di.op == BKPT) {

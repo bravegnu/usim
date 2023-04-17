@@ -233,12 +233,12 @@ private:
 
   uint16_t HI16()
   {
-    return (m_inst >> 16) & 0xFF;
+    return (m_inst >> 16) & 0xFFFF;
   }
 
   uint16_t LO16()
   {
-    return (m_inst & 0xFF);
+    return (m_inst & 0xFFFF);
   }
 
 public:
